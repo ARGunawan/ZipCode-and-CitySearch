@@ -29,10 +29,22 @@ function ZipcodeSearchField(props) {
         {/* input the zipcode to be searched
             when the field is changed, then it triggers the screen to change. */}
         Zip Code:
-        <input value ={props.zipcode} onChange={props.zipChange} placeholder="Try 10016"></input>
+        <input value ={props.zipcode} onChange={props.zipChange} placeholder ="Try 10016"></input>
       </div>
     </div>
   );
+}
+
+//Creates the city search
+function CitySearchField(props){
+  return(
+    <div>
+      <div>
+          City Code:
+          <input type = "text" value = {props.value} placeholder = "Try Brooklyn"></input>
+      </div>
+    </div>
+  )
 }
 
 
@@ -95,6 +107,20 @@ class App extends Component {
     }
   }
 
+  UpdateCity(event) {
+		const city = event.target.value.toUpperCase();
+		this.setState({
+			city: city
+		});
+
+		fetch("http://ctp-zip-api.herokuapp.com/city/" + city)
+		.then((response) => {
+			return response.json();
+		})
+
+	}
+
+
   //after all the work is done, this is final bit that it should do.
   render() {
     //console.log(this.state.data);
@@ -111,6 +137,12 @@ class App extends Component {
                 zipChange = {this.updateZip}
               />
                 {this.state.data}
+
+              <CitySearchField
+              value={this.state.city}
+              cityChange = {this.UpdateCity}
+              />
+              {this.state.city}
             </div>
         </div>
       </div>
