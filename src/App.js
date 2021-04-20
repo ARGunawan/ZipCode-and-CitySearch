@@ -129,7 +129,6 @@ class App extends Component {
         </div>
         <div>
           <div>
-          
             <div className = "centering">
               {/* input the zipcode to be searched
             when the field is changed, then it triggers the screen to change. */}
