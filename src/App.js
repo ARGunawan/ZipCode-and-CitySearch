@@ -47,8 +47,7 @@ class App extends Component {
   //update city method below
   updatedCity = async (event) => {
     let city = event.target.value;
-    let linkToAPI =
-      "https://ctp-zip-api.herokuapp.com/city/" + city.toUpperCase(); //link to api
+    let linkToAPI = "https://ctp-zip-api.herokuapp.com/city/" + city.toUpperCase(); //link to api
     this.setState({
       cityName: city,
     });
