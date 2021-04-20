@@ -16,7 +16,6 @@ class App extends Component {
     };
 
     //if it does get updated, bind that result to the state.
-
     this.updatedZip = this.updatedZip.bind(this);
     this.updatedCity = this.updatedCity.bind(this);
   }
@@ -72,12 +71,12 @@ class App extends Component {
     let foundMatch = this.state.found;
     let output = [];
     if (!foundMatch) {
-      return <div className="centering">Not found </div>;
+      return <div className="centering">Please enter a valid zip code </div>;
     } else {
       //For loop is needed because the way the data is set up it is set up in an array, so need to iterate through it
       for (let i = 0; i < currData.length; i++) {
         output.push(
-          <div className="cards">
+          <div className= "background">
             <h1>{currData[i].City}</h1>
             {/* print the city in which lands in the zipcode*/}
             {/* an unordered list of the needed things
@@ -105,7 +104,7 @@ class App extends Component {
     let foundMatch = this.state.foundZips;
     let output = [];
     if (!foundMatch) {
-      return <div className="centering">Not found </div>;
+      return <div className="centering">Please enter a valid city </div>;
     } else {
       //For loop is needed because the way the data is set up it is set up in an array, so need to iterate through it
       for (let i = 0; i < currData.length; i++) {
@@ -124,8 +123,8 @@ class App extends Component {
   render() {
     //console.log(this.state.data);
     return (
-      <div className="App">
-        <div className="App-header">
+      <div className = "App">
+        <div className = "App-header">
           <h2>Zip Code and City Name Search</h2>
         </div>
         <div>
