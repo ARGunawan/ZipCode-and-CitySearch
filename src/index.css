@@ -36,3 +36,7 @@ input {
 li {
   text-align: left;
 }
+
+.zipcodeList {
+  display: inline;
+}
