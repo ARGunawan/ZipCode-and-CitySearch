@@ -16,13 +16,14 @@ class App extends Component {
     };
 
     //if it does get updated, bind that result to the state.
-    this.updateZip = this.updateZip.bind(this);
-    this.updateCity = this.updateCity.bind(this);
+
+    this.updatedZip = this.updatedZip.bind(this);
+    this.updatedCity = this.updatedCity.bind(this);
   }
 
   //the code that changes the page and gets the zipcode information
-  updateZip = async (evt) => {
-    let zip = evt.target.value;
+  updatedZip = async (event) => {
+    let zip = event.target.value;
     let linkToAPI = "https://ctp-zip-api.herokuapp.com/zip/" + zip; //link to the api
 
     this.setState({
@@ -45,8 +46,8 @@ class App extends Component {
   };
 
   //update city method below
-  updateCity = async (evt) => {
-    let city = evt.target.value;
+  updatedCity = async (event) => {
+    let city = event.target.value;
     let linkToAPI =
       "http://ctp-zip-api.herokuapp.com/city/" + city.toUpperCase(); //link to api
     this.setState({
@@ -77,7 +78,7 @@ class App extends Component {
       for (let i = 0; i < currData.length; i++) {
         output.push(
           <div className="cards">
-            <h3>{currData[i].City}</h3>
+            <h1>{currData[i].City}</h1>
             {/* print the city in which lands in the zipcode*/}
             {/* an unordered list of the needed things
           - state
@@ -86,11 +87,10 @@ class App extends Component {
           - total wages */}
             <ul>
               <li>State: {currData[i].State}</li>
-              <li>
-                Location: ({currData[i].Lat},{currData[i].Long})
-              </li>
-              <li>Population (estimated): {currData[i].EstimatedPopulation}</li>
-              <li>Total Wages: {currData[i].TotalWages}</li>
+              <li>Country: {currData[i].Country}</li>
+              <li>Location: ({currData[i].Lat},{currData[i].Long})</li>
+              <li>Population (Estimated): {currData[i].EstimatedPopulation}</li>
+              <li>Total Wages: ${currData[i].TotalWages + '.00'}</li>
             </ul>
           </div>
         );
@@ -126,28 +126,28 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <h2>Zip Code Search</h2>
+          <h2>Zip Code and City Name Search</h2>
         </div>
         <div>
           <div>
             <div className="centering">
               {/* input the zipcode to be searched
             when the field is changed, then it triggers the screen to change. */}
-              Zip Code:
+              ZIP CODE: 
               <input
                 value={this.state.zipcode}
-                onChange={this.updateZip}
-                placeholder="Try 10016"
+                onChange={this.updatedZip}
+                placeholder = "Try 11207"
               ></input>
               {this.makeTableZip()}
             </div>
             {/* Below is the div for city search */}
             <div className="centering">
-              CITY NAME:
+              CITY NAME: 
               <input
-                value={this.state.cityName}
-                onChange={this.updateCity}
-                placeholder="Try brooklyn"
+                value = {this.state.cityName}
+                onChange = {this.updatedCity}
+                placeholder = "Try Brooklyn"
               ></input>
               {this.makeTableCity()}
             </div>
