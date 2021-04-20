@@ -1,77 +1,6 @@
 import React, { Component } from "react";
+import axios from "axios";
 import "./App.css";
-
-{
-  /*just handles the display of the information if that information exists*/
-}
-function City(props) {
-  return (
-    <div className="cards">
-      <h3>{props.cityData.City}</h3>
-      {/* print the city in which lands in the zipcode*/}
-      {/* an unordered list of the needed things
-          - state
-          - location
-          - population
-          - total wages */}
-      <ul>
-        <li>State: {props.cityData.State}</li>
-        <li>
-          Location: ({props.cityData.Lat},{props.cityData.Long})
-        </li>
-        <li>Population (estimated): {props.cityData.EstimatedPopulation}</li>
-        <li>Total Wages: {props.cityData.TotalWages}</li>
-      </ul>
-    </div>
-  );
-}
-
-//sets up the ZipSearchField
-function ZipcodeSearchField(props) {
-  return (
-    <div>
-      <div className="centering">
-        {/* input the zipcode to be searched
-            when the field is changed, then it triggers the screen to change. */}
-        Zip Code:
-        <input
-          value={props.zipcode}
-          onChange={props.zipChange}
-          placeholder="Try 10016"
-        ></input>
-      </div>
-    </div>
-  );
-}
-
-/** methods for city search below modified by Ifte***/
-function AllCityZips(props) {
-  return (
-    <div>
-      <div>
-        <ul>
-          <li>{props.zipData}</li>
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-function CitySearchField(props) {
-  return (
-    <div>
-      <div className="centering">
-        CITY NAME:
-        <input
-          value={props.City}
-          onChange={props.cityChange}
-          placeholder="Try brooklyn"
-        ></input>
-      </div>
-    </div>
-  );
-}
-/*END OF METHODS */
 
 class App extends Component {
   constructor(props) {
@@ -79,9 +8,11 @@ class App extends Component {
     //the default state of the state
     this.state = {
       zipcode: "", //no zipcode
-      data: [<div className="centering">No Result</div>], //no results
+      data: [], //no results
       cityName: "",
-      placeZips: [<div className="centering">No Result</div>], //need for city search app
+      placeZips: [], //need for city search app
+      found: false, //this is for the zipcode search part
+      foundZips: false, //this is for the city search zipcode part
     };
 
     //if it does get updated, bind that result to the state.
@@ -90,86 +21,105 @@ class App extends Component {
   }
 
   //the code that changes the page and gets the zipcode information
-  updateZip(evt) {
+  updateZip = async (evt) => {
     let zip = evt.target.value;
+    let linkToAPI = "https://ctp-zip-api.herokuapp.com/zip/" + zip; //link to the api
+
     this.setState({
       zipcode: zip,
     });
     //console.log(this.state.zipcode);
 
-    //checks that the zipcode length must be 5 digits
-    //if it is, does the work
-    if (zip.length === 5) {
-      //get the information from the api
-      fetch("https://ctp-zip-api.herokuapp.com/zip/" + zip)
-        //get the response
-        .then((response) => {
-          if (response.ok) {
-            //if the reponse is ok, then it turns the response into a json file
-            //console.log(response.json());
-            return response.json();
-            //else, it returns nothing
-          } else {
-            return [];
-          }
-        })
-
-        //take the response and map it so that it can be displayed.
-        .then((responseJson) => {
-          const cities = responseJson.map((d) => {
-            return <City cityData={d} />;
-          });
-
-          //set the state so that the data is the cities
-          this.setState({
-            data: cities,
-          });
-        });
+    //if the zipcode is valid we store the data of the citie into the state and found is true
+    try {
+      let response = await axios.get(linkToAPI);
+      this.setState({ data: response.data, found: true });
+    } catch (error) {
+      //If there was an invalid zipcode we send errors into our console and setstate to false
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        this.setState({ found: false });
+      }
     }
-    //else, the page will display No Result
-    else {
-      this.setState({
-        data: [<div className="centering">Not found </div>],
-      });
-    }
-  }
+  };
 
   //update city method below
-  updateCity(evt) {
+  updateCity = async (evt) => {
     let city = evt.target.value;
+    let linkToAPI =
+      "http://ctp-zip-api.herokuapp.com/city/" + city.toUpperCase(); //link to api
     this.setState({
       cityName: city,
     });
 
-    if (this.state.placeZips.length != 0) {
-      fetch("http://ctp-zip-api.herokuapp.com/city/" + city.toUpperCase()) //makes sure input is in uppercase
-        .then((response) => {
-          if (response.ok) {
-            //returns data if feteched correctly
-            return response.json();
-          } else {
-            return [];
-          }
-        })
-
-        .then((responseJson) => {
-          const allZips = responseJson.map((z) => {
-            return <AllCityZips zipData={z} />; //puts the data into zipData
-          });
-
-          //set the state so that the data is the cities
-          this.setState({
-            placeZips: allZips, //changes the empty array
-          });
-        });
-    } //Error handling when the city is not found
-    else {
-      this.setState({
-        placeZips: [<div className="centering">Not Found </div>],
-      });
+    try {
+      let response = await axios.get(linkToAPI);
+      this.setState({ placeZips: response.data, foundZips: true });
+    } catch (error) {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        this.setState({ foundZips: false });
+      }
     }
-  }
+  };
 
+  //set up output for the first part where the user enters a zipcode and it will output city information
+  makeTableZip = () => {
+    let currData = this.state.data;
+    let foundMatch = this.state.found;
+    let output = [];
+    if (!foundMatch) {
+      return <div className="centering">Not found </div>;
+    } else {
+      //For loop is needed because the way the data is set up it is set up in an array, so need to iterate through it
+      for (let i = 0; i < currData.length; i++) {
+        output.push(
+          <div className="cards">
+            <h3>{currData[i].City}</h3>
+            {/* print the city in which lands in the zipcode*/}
+            {/* an unordered list of the needed things
+          - state
+          - location
+          - population
+          - total wages */}
+            <ul>
+              <li>State: {currData[i].State}</li>
+              <li>
+                Location: ({currData[i].Lat},{currData[i].Long})
+              </li>
+              <li>Population (estimated): {currData[i].EstimatedPopulation}</li>
+              <li>Total Wages: {currData[i].TotalWages}</li>
+            </ul>
+          </div>
+        );
+      }
+      return output;
+    }
+  };
+
+  //set up output for the second part where user inputs a city and outputs all the zipcodes associated with the city
+  makeTableCity = () => {
+    let currData = this.state.placeZips;
+    let foundMatch = this.state.foundZips;
+    let output = [];
+    if (!foundMatch) {
+      return <div className="centering">Not found </div>;
+    } else {
+      //For loop is needed because the way the data is set up it is set up in an array, so need to iterate through it
+      for (let i = 0; i < currData.length; i++) {
+        output.push(
+          <div>
+            <ul>
+              <li>{currData[i]}</li>
+            </ul>
+          </div>
+        );
+      }
+      return output;
+    }
+  };
   //after all the work is done, this is final bit that it should do.
   render() {
     //console.log(this.state.data);
@@ -180,17 +130,26 @@ class App extends Component {
         </div>
         <div>
           <div>
-            <div>
-              <ZipcodeSearchField
-                zip={this.state.zipcode}
-                zipChange={this.updateZip}
-              />
-              {this.state.data}
+            <div className="centering">
+              {/* input the zipcode to be searched
+            when the field is changed, then it triggers the screen to change. */}
+              Zip Code:
+              <input
+                value={this.state.zipcode}
+                onChange={this.updateZip}
+                placeholder="Try 10016"
+              ></input>
+              {this.makeTableZip()}
             </div>
             {/* Below is the div for city search */}
-            <div>
-              <CitySearchField cityChange={this.updateCity} />
-              {this.state.placeZips}
+            <div className="centering">
+              CITY NAME:
+              <input
+                value={this.state.cityName}
+                onChange={this.updateCity}
+                placeholder="Try brooklyn"
+              ></input>
+              {this.makeTableCity()}
             </div>
           </div>
         </div>
