@@ -35,6 +35,30 @@ function ZipcodeSearchField(props) {
   );
 }
 
+/** methods for city search below modified by Ifte***/
+function AllCityZips(props){
+  return(
+    <div>
+      <div>
+        <ul>
+          <li>{props.zipData}</li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+function CitySearchField(props) {
+  return (
+    <div>
+      <div>
+        CITY NAME:
+        <input value ={props.City} onChange={props.cityChange} placeholder="Try brooklyn"></input>
+      </div>
+    </div>
+  );
+}
+/*END OF METHODS */
 
 class App extends Component {
   constructor(props){
@@ -42,11 +66,14 @@ class App extends Component {
     //the default state of the state
     this.state = {
       zipcode: '', //no zipcode
-      data: [<div className="centering">No Result</div>] //no results
+      data: [<div className="centering">No Result</div>], //no results
+      cityName: '', 
+      placeZips: [] //need for city search app
     };
 
     //if it does get updated, bind that result to the state.
     this.updateZip = this.updateZip.bind(this);
+    this.updateCity = this.updateCity.bind(this);
   }
 
   //the code that changes the page and gets the zipcode information
@@ -95,6 +122,35 @@ class App extends Component {
     }
   }
 
+  //update city method below
+  updateCity(evt){
+    let city = evt.target.value;
+    this.setState({
+      cityName: city,
+    });
+
+    fetch('http://ctp-zip-api.herokuapp.com/city/'+city.toUpperCase())
+      .then((response) => {
+        if(response.ok) {
+            return response.json();
+          } 
+          else {
+            return [];
+          }
+      })
+
+      .then((responseJson) => {
+        const allZips = responseJson.map(z => {
+          return <AllCityZips zipData={z} />
+        })
+
+        //set the state so that the data is the cities
+        this.setState({
+          placeZips: allZips,
+        })
+      })
+  }
+
   //after all the work is done, this is final bit that it should do.
   render() {
     //console.log(this.state.data);
@@ -111,6 +167,12 @@ class App extends Component {
                 zipChange = {this.updateZip}
               />
                 {this.state.data}
+            </div>
+            <div> 
+              <CitySearchField
+                  cityChange = {this.updateCity}
+              />
+                {this.state.placeZips}
             </div>
         </div>
       </div>
