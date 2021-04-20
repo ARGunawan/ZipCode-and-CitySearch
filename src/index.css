@@ -1,8 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -16,7 +14,7 @@ input {
   border-radius: 5%;
 }
 
-.cards {
+.background {
   background: #fff;
   border-radius: 2%;
   border-style: solid;
@@ -31,6 +29,14 @@ input {
 
 .centering {
   text-align: center;
+}
+
+li {
+  text-align: left;
+}
+
+.zipcodeList {
+  display: inline;
 }
 
 li {
