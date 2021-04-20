@@ -16,6 +16,7 @@ class App extends Component {
     };
 
     //if it does get updated, bind that result to the state.
+
     this.updatedZip = this.updatedZip.bind(this);
     this.updatedCity = this.updatedCity.bind(this);
   }
