@@ -4,7 +4,7 @@ import './App.css';
 {/*just handles the display of the information if that information exists*/}
 function City(props) {
   return (
-    <div>
+    <div className="cards">
       <h3>{props.cityData.City}</h3>{/* print the city in which lands in the zipcode*/}
       {/* an unordered list of the needed things
           - state
@@ -25,7 +25,7 @@ function City(props) {
 function ZipcodeSearchField(props) {
   return (
     <div>
-      <div>
+      <div className="centering">
         {/* input the zipcode to be searched
             when the field is changed, then it triggers the screen to change. */}
         Zip Code:
@@ -42,7 +42,7 @@ class App extends Component {
     //the default state of the state
     this.state = {
       zipcode: '', //no zipcode
-      data: [<div>No Result</div>] //no results
+      data: [<div className="centering">No Result</div>] //no results
     };
 
     //if it does get updated, bind that result to the state.
@@ -90,7 +90,7 @@ class App extends Component {
     //else, the page will display No Result
     else{
       this.setState({
-        data: [<div>No Result</div>]
+        data: [<div className="centering">No Result</div>]
       })
     }
   }
