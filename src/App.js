@@ -68,7 +68,7 @@ class App extends Component {
       zipcode: '', //no zipcode
       data: [<div className="centering">No Result</div>], //no results
       cityName: '', 
-      placeZips: [] //need for city search app
+      placeZips: [<div className="centering">No Result</div>] //need for city search app
     };
 
     //if it does get updated, bind that result to the state.
@@ -117,7 +117,7 @@ class App extends Component {
     //else, the page will display No Result
     else{
       this.setState({
-        data: [<div className="centering">No Result</div>]
+        data: [<div className="centering">Not found </div>]
       })
     }
   }
@@ -129,7 +129,8 @@ class App extends Component {
       cityName: city,
     });
 
-    fetch('https://ctp-zip-api.herokuapp.com/city/'+city.toUpperCase()) //makes sure input is in uppercase
+    if(this.state.placeZips.length != 0){ 
+      fetch('http://ctp-zip-api.herokuapp.com/city/'+city.toUpperCase()) //makes sure input is in uppercase
       .then((response) => { 
         if(response.ok) { //returns data if feteched correctly 
             return response.json();
@@ -149,7 +150,13 @@ class App extends Component {
           placeZips: allZips, //changes the empty array
         })
       })
-  }
+    }else //Error handling when the city is not found
+      { 
+      this.setState({
+        placeZips: [<div className="centering">Not Found </div>]
+      })
+    }
+  } 
 
   //after all the work is done, this is final bit that it should do.
   render() {
