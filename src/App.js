@@ -129,7 +129,7 @@ class App extends Component {
       cityName: city,
     });
 
-    fetch('http://ctp-zip-api.herokuapp.com/city/'+city.toUpperCase()) //makes sure input is in uppercase
+    fetch('https://ctp-zip-api.herokuapp.com/city/'+city.toUpperCase()) //makes sure input is in uppercase
       .then((response) => { 
         if(response.ok) { //returns data if feteched correctly 
             return response.json();
