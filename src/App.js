@@ -119,13 +119,11 @@ class App extends Component {
           const cities = responseJson.map((d) => {
             return <City cityData={d} />;
           });
+
           //set the state so that the data is the cities
           this.setState({
             data: cities,
           });
-        })
-        .catch((error) => {
-          console.log("Error: ");
         });
     }
     //else, the page will display No Result
