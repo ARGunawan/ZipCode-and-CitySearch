@@ -129,9 +129,9 @@ class App extends Component {
       cityName: city,
     });
 
-    fetch('http://ctp-zip-api.herokuapp.com/city/'+city.toUpperCase())
-      .then((response) => {
-        if(response.ok) {
+    fetch('http://ctp-zip-api.herokuapp.com/city/'+city.toUpperCase()) //makes sure input is in uppercase
+      .then((response) => { 
+        if(response.ok) { //returns data if feteched correctly 
             return response.json();
           } 
           else {
@@ -141,12 +141,12 @@ class App extends Component {
 
       .then((responseJson) => {
         const allZips = responseJson.map(z => {
-          return <AllCityZips zipData={z} />
+          return <AllCityZips zipData={z} /> //puts the data into zipData
         })
 
         //set the state so that the data is the cities
         this.setState({
-          placeZips: allZips,
+          placeZips: allZips, //changes the empty array
         })
       })
   }
@@ -168,6 +168,7 @@ class App extends Component {
               />
                 {this.state.data}
             </div>
+            {/* Below is the div for city search */}
             <div> 
               <CitySearchField
                   cityChange = {this.updateCity}
