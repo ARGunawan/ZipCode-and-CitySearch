@@ -62,7 +62,7 @@ class App extends Component {
     //if it is, does the work
     if(zip.length === 5){
       //get the information from the api
-      fetch('http://ctp-zip-api.herokuapp.com/zip/' + zip)
+      fetch('https://ctp-zip-api.herokuapp.com/zip/' + zip)
 
         //get the response
         .then((response) => {
