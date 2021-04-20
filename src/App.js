@@ -99,41 +99,41 @@ class App extends Component {
 
     //checks that the zipcode length must be 5 digits
     //if it is, does the work
-    //if (zip.length === 5) {
-    //get the information from the api
-    fetch("https://ctp-zip-api.herokuapp.com/zip/" + zip)
-      //get the response
-      .then((response) => {
-        if (response.ok) {
-          //if the reponse is ok, then it turns the response into a json file
-          //console.log(response.json());
-          return response.json();
-          //else, it returns nothing
-        } else {
-          return [];
-        }
-      })
+    if (zip.length === 5) {
+      //get the information from the api
+      fetch("https://ctp-zip-api.herokuapp.com/zip/" + zip)
+        //get the response
+        .then((response) => {
+          if (response.ok) {
+            //if the reponse is ok, then it turns the response into a json file
+            //console.log(response.json());
+            return response.json();
+            //else, it returns nothing
+          } else {
+            return [];
+          }
+        })
 
-      //take the response and map it so that it can be displayed.
-      .then((responseJson) => {
-        const cities = responseJson.map((d) => {
-          return <City cityData={d} />;
+        //take the response and map it so that it can be displayed.
+        .then((responseJson) => {
+          const cities = responseJson.map((d) => {
+            return <City cityData={d} />;
+          });
+          //set the state so that the data is the cities
+          this.setState({
+            data: cities,
+          });
+        })
+        .catch((error) => {
+          console.log("Error: ");
         });
-        //set the state so that the data is the cities
-        this.setState({
-          data: cities,
-        });
-      })
-      .catch((error) => {
-        console.log("Error: ");
-      });
-    //}
+    }
     //else, the page will display No Result
-    // else {
-    //   this.setState({
-    //     data: [<div className="centering">Not found </div>],
-    //   });
-    // }
+    else {
+      this.setState({
+        data: [<div className="centering">Not found </div>],
+      });
+    }
   }
 
   //update city method below
