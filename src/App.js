@@ -110,7 +110,7 @@ class App extends Component {
         output.push(
           <div>
             <ul>
-              <li className="zipcodeList">Zip Code:{currData[i]}</li>
+              <li className="zipcodeList">{currData[i]}</li>
             </ul>
           </div>
         );
